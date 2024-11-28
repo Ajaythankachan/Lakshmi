@@ -14,9 +14,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Unzip New - Lakshmi.zip
+      - name: Unzip New-Lakshmi.zip
         run: |
-          unzip New - Lakshmi.zip -d temp_unzip # Unzips into a temporary folder
+          unzip New-Lakshmi.zip -d temp_unzip # Unzips into a temporary folder
          
           
           ls -l # Verify the root now contains index.html
