@@ -25,5 +25,5 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add Lakshmi
-          git commit -m "Unzipped Lakshmi.zip"
+          git commit -m "Unzipped New-Lakshmi.zip"
           git push origin main # Pushes to the main branch
