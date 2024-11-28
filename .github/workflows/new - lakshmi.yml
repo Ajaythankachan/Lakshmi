@@ -10,20 +10,23 @@ jobs:
   unzip:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3 # Pulls the repository into the virtual machine
+        uses: actions/checkout@v3
 
-      - name: Unzip New-Lakshmi.zip
+      # Step 2: Unzip the file into the root folder
+      - name: Unzip New-Lakshmi.zip into the root
         run: |
-          unzip New-Lakshmi.zip -d Lakshmi # Extracts the zip file into a folder named 'Lakshmi'
-          ls -l # Lists the unzipped files for confirmation
+          unzip -o New-Lakshmi.zip -d . # Extracts directly into the root directory
+          ls -l # Lists the extracted files for confirmation
 
+      # Step 3: Commit and push the unzipped files to the repository
       - name: Commit and Push Unzipped Files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub-provided token for authentication
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add Lakshmi
-          git commit -m "Unzipped New-Lakshmi.zip"
-          git push origin main # Pushes to the main branch
+          git add .
+          git commit -m "Unzipped New-Lakshmi.zip to root"
+          git push origin main
