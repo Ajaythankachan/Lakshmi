@@ -15,27 +15,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Verify ZIP file exists in root directory (or adjust path)
+      # Step 2: Verify ZIP file exists in root directory
       - name: Verify ZIP file exists
         run: |
-          if [ ! -f "New-Lakshmi.zip" ]; then  # Change path if needed
+          if [ ! -f "New-Lakshmi.zip" ]; then
             echo "Error: New-Lakshmi.zip not found."
             exit 1
           fi
 
       # Step 3: List files in the repository (for debugging)
-      - name: List files in the repository
+      - name: List files in the repository before extraction
         run: ls -alh
 
       # Step 4: Unzip New-Lakshmi.zip to root
       - name: Unzip New-Lakshmi.zip to root directory
         run: |
           mkdir -p temp_unzip
-          unzip -o New-Lakshmi.zip -d temp_unzip  # Adjust path if needed
-          rsync -av --delete temp_unzip/ ./  # Overwrites root with unzipped files
+          unzip -o New-Lakshmi.zip -d temp_unzip  # Extract to temp folder
+          
+          # Remove backslashes from paths and place the files in the root
+          rsync -av --remove-source-files temp_unzip/ ./  # Move files from temp_unzip to the root
+          
+          # Clean up the temporary folder
           rm -rf temp_unzip
 
-      # Step 5: Commit and push unzipped files
+      # Step 5: List files in the repository after extraction (for debugging)
+      - name: List files in the repository after extraction
+        run: ls -alh
+
+      # Step 6: Commit and push changes (if needed)
       - name: Commit and Push Unzipped Files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
