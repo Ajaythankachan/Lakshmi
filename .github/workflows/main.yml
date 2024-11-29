@@ -14,7 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Verify ZIP file exists
+      # Step 2: List repository contents for debugging
+      - name: List repository contents
+        run: ls -la
+
+      # Step 3: Verify ZIP file exists
       - name: Verify ZIP file exists
         run: |
           if [ ! -f "New-Lakshmi.zip" ]; then
@@ -22,15 +26,20 @@ jobs:
             exit 1
           fi
 
-      # Step 3: Unzip and overwrite existing files
+      # Step 4: Unzip and overwrite existing files
       - name: Unzip New-Lakshmi.zip into the root
         run: |
           mkdir -p temp_unzip
           unzip -o New-Lakshmi.zip -d temp_unzip # Extracts ZIP into a temp folder
+          ls -la temp_unzip  # List files in temp_unzip for debugging
           rsync -av --delete temp_unzip/ ./ # Overwrites root with unzipped files
-          ls -la
+          ls -la # List root folder after rsync for confirmation
 
-      # Step 4: Commit and Push Unzipped Files to master branch
+      # Step 5: Check git status before committing
+      - name: Check git status before commit
+        run: git status
+
+      # Step 6: Commit and Push Unzipped Files to master branch
       - name: Commit and Push Unzipped Files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
