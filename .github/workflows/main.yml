@@ -1,0 +1,42 @@
+name: Unzip File in Repository
+
+on:
+  workflow_dispatch:  # Allows you to manually run the workflow
+  push:
+    branches:
+      - master  # This will run the workflow when changes are pushed to the 'master' branch
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Verify ZIP file exists
+      - name: Verify ZIP file exists
+        run: |
+          if [ ! -f "New-Lakshmi.zip" ]; then
+            echo "Error: New-Lakshmi.zip not found in the repository root."
+            exit 1
+          fi
+
+      # Step 3: Unzip and overwrite existing files
+      - name: Unzip New-Lakshmi.zip into the root
+        run: |
+          mkdir -p temp_unzip
+          unzip -o New-Lakshmi.zip -d temp_unzip # Extracts ZIP into a temp folder
+          rsync -av --delete temp_unzip/ ./ # Overwrites root with unzipped files
+          ls -la
+
+      # Step 4: Commit and Push Unzipped Files to master branch
+      - name: Commit and Push Unzipped Files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Unzipped New-Lakshmi.zip to root" || echo "No changes to commit"
+          git push origin master  # Pushes changes to the 'master' branch
