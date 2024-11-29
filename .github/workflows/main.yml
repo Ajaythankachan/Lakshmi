@@ -12,21 +12,7 @@ jobs:
     runs-on: ubuntu-latest  # This will run the job on an Ubuntu machine
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          # We make sure we are pulling the correct branch
-          ref: main  # Ensure it’s the branch you want to work with (e.g., main or master)
-
-      # Step 2: Verify the ZIP file exists
-      - name: Verify ZIP file exists
-        run: |
-          # Ensure New-Lakshmi.zip exists in the root directory
-          if [ ! -f "New-Lakshmi.zip" ]; then
-            echo "Error: New-Lakshmi.zip not found in the repository."
-            exit 1
-          fi
+   
 
       # Step 3: Unzip New-Lakshmi.zip to root directory
       - name: Unzip New-Lakshmi.zip to root directory
