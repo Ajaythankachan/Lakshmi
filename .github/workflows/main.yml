@@ -28,7 +28,7 @@ jobs:
           # Move all files and directories from temp_unzip to the root of the repository
           rsync -av --delete temp_unzip/ ./  # Overwrites existing files in the root directory
           
-          # Clean up the temporary folder
+          # Clean up the temporary folder 
           rm -rf temp_unzip
           
       # Step 4: Commit and Push Changes (if any changes are made)
