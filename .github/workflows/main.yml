@@ -1,50 +1,47 @@
 name: Unzip File and Extract to Root
 
-# Trigger the workflow manually or on push to a specific branch
 on:
   workflow_dispatch:  # Manually trigger the workflow
   push:
     branches:
-      - main  # Change 'main' to your branch name if different
+      - main  # Adjust branch name as needed
 
 jobs:
   unzip:
-    runs-on: ubuntu-latest  # This will run the job on an Ubuntu machine
+    runs-on: ubuntu-latest  # Use Ubuntu for this workflow
 
     steps:
-   
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Verify ZIP file exists in assets folder
+      - name: Verify ZIP file exists
+        run: |
+          if [ ! -f "assets/New-Lakshmi.zip" ]; then
+            echo "Error: assets/New-Lakshmi.zip not found."
+            exit 1
+          fi
+
+      # Step 3: List files in the repository (for debugging)
       - name: List files in the repository
         run: ls -alh
 
-      # Step 3: Unzip New-Lakshmi.zip to root directory
+      # Step 4: Unzip New-Lakshmi.zip from assets to root
       - name: Unzip New-Lakshmi.zip to root directory
         run: |
-          # Create a temporary directory to unzip the contents
           mkdir -p temp_unzip
-          
-          # Unzip New-Lakshmi.zip into the temporary folder
-          unzip -o New-Lakshmi.zip -d temp_unzip
-          
-          # Move all files and directories from temp_unzip to the root of the repository
-          rsync -av --delete temp_unzip/ ./  # Overwrites existing files in the root directory
-          
-          # Clean up the temporary folder 
+          unzip -o assets/New-Lakshmi.zip -d temp_unzip  # Modify the path as needed
+          rsync -av --delete temp_unzip/ ./  # Overwrites root with unzipped files
           rm -rf temp_unzip
-          
-      # Step 4: Commit and Push Changes (if any changes are made)
+
+      # Step 5: Commit and push unzipped files
       - name: Commit and Push Unzipped Files
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Configure GitHub Actions to commit changes
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          
-          # Add all files that were unzipped and are now in the root directory
           git add .
-          
-          # Commit the changes if there were any changes after unzipping
           git commit -m "Unzipped New-Lakshmi.zip to root" || echo "No changes to commit"
-          
-          # Push the changes to the repository (e.g., to the main branch)
-          git push origin main  # Change this if you are working with a different branch
+          git push origin main
