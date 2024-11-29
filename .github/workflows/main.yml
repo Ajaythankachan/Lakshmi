@@ -4,48 +4,45 @@ on:
   workflow_dispatch:  # Allows you to manually run the workflow
   push:
     branches:
-      - master  # This will run the workflow when changes are pushed to the 'master' branch
+      - master  # Trigger when changes are pushed to the 'master' branch (you can replace it with your branch name)
 
 jobs:
   unzip:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Runs on an Ubuntu VM
+
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: List repository contents for debugging
-      - name: List repository contents
-        run: ls -la
-
-      # Step 3: Verify ZIP file exists
-      - name: Verify ZIP file exists
+      # Step 2: Unzip New-Lakshmi.zip into the root of the repository
+      - name: Unzip New-Lakshmi.zip
         run: |
+          # Check if the file exists
           if [ ! -f "New-Lakshmi.zip" ]; then
-            echo "Error: New-Lakshmi.zip not found in the repository root."
+            echo "Error: New-Lakshmi.zip not found in the repository."
             exit 1
           fi
 
-      # Step 4: Unzip and overwrite existing files
-      - name: Unzip New-Lakshmi.zip into the root
-        run: |
+          # Create a temporary folder for unzipping
           mkdir -p temp_unzip
-          unzip -o New-Lakshmi.zip -d temp_unzip # Extracts ZIP into a temp folder
-          ls -la temp_unzip  # List files in temp_unzip for debugging
-          rsync -av --delete temp_unzip/ ./ # Overwrites root with unzipped files
-          ls -la # List root folder after rsync for confirmation
+          
+          # Unzip the file into the temporary folder
+          unzip -o New-Lakshmi.zip -d temp_unzip
 
-      # Step 5: Check git status before committing
-      - name: Check git status before commit
-        run: git status
+          # Move the extracted files into the root folder
+          rsync -av --delete temp_unzip/ ./ 
 
-      # Step 6: Commit and Push Unzipped Files to master branch
+          # Clean up the temporary folder
+          rm -rf temp_unzip
+          
+      # Step 3: Commit and Push Unzipped Files to the repository (if needed)
       - name: Commit and Push Unzipped Files
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub-provided token for authentication
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Unzipped New-Lakshmi.zip to root" || echo "No changes to commit"
-          git push origin master  # Pushes changes to the 'master' branch
+          git commit -m "Unzipped New-Lakshmi.zip into root" || echo "No changes to commit"
+          git push origin master  # Push changes to the 'master' branch
