@@ -13,6 +13,8 @@ jobs:
 
     steps:
    
+      - name: List files in the repository
+        run: ls -alh
 
       # Step 3: Unzip New-Lakshmi.zip to root directory
       - name: Unzip New-Lakshmi.zip to root directory
