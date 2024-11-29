@@ -27,17 +27,10 @@ jobs:
       - name: List files in the repository before extraction
         run: ls -alh
 
-      # Step 4: Unzip New-Lakshmi.zip to root
+      # Step 4: Unzip New-Lakshmi.zip to root (using -j to ignore folder structure)
       - name: Unzip New-Lakshmi.zip to root directory
         run: |
-          mkdir -p temp_unzip
-          unzip -o New-Lakshmi.zip -d temp_unzip  # Extract to temp folder
-          
-          # Remove backslashes from paths and place the files in the root
-          rsync -av --remove-source-files temp_unzip/ ./  # Move files from temp_unzip to the root
-          
-          # Clean up the temporary folder
-          rm -rf temp_unzip
+          unzip -o New-Lakshmi.zip -d .  # Extract to the root directory, ignore subfolders
 
       # Step 5: List files in the repository after extraction (for debugging)
       - name: List files in the repository after extraction
