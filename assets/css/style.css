@@ -18,7 +18,7 @@
 * - 2.1 - Colors
 * - 2.2 - CSS Animation
 * - 2.3 - Backtotop
-* - 2.4 - Spaces or Gaps
+* - 2.4 - Spaces or Gaps.hero_section_1 .hero_section_image img
 * - 2.5 - Button
 * - 2.6 - Order & Unorder List
 * - 2.7 - Typography
@@ -2442,10 +2442,10 @@ blockquote .quote_content {
 
 .hero_section_1 .hero_section_image img {
   position: absolute;
-  right: -76px;
-  width: 55%;
-  top: 28%;
-}
+  right: 19px;
+  width: 48%;
+  top: 32%;
+} 
 
 .hero_section_1 .outline_text {
   left: 32%;
@@ -7131,6 +7131,9 @@ Responsive For Mobile & Tablet Devices
   .main_slider .title_text {
     font-size: 48px;
     line-height: 54px;
+  }
+  .hero_section_1 .hero_section_image{
+    display: none;
   }
 
   .main_slider .info_list {
