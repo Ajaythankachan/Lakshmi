@@ -1,0 +1,29 @@
+name: Unzip New-Lakshmi.zip
+
+on:
+  workflow_dispatch:  # Allows you to manually run the workflow
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: List files before unzipping (for confirmation)
+      - name: List files in repository
+        run: ls -alh
+
+      # Step 3: Unzip New-Lakshmi.zip
+      - name: Unzip New-Lakshmi.zip
+        run: |
+          mkdir -p temp_unzip  # Create a temporary folder
+          unzip -o New-Lakshmi.zip -d temp_unzip  # Extract the ZIP file into temp_unzip
+          rsync -av temp_unzip/ ./  # Move the unzipped files to the repository root
+          rm -rf temp_unzip  # Clean up the temporary folder
+
+      # Step 4: List files after unzipping (to verify extraction)
+      - name: List files after unzipping
+        run: ls -alh
